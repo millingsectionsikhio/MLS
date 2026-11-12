@@ -86,3 +86,50 @@
   function close() { var d = document.getElementById('kbs-drawer'); if (d) d.classList.remove('open'); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
+
+/* ===== เลือกวิธีแนบรูปบนมือถือ: ถ่ายรูปทันที หรือ เลือกจากอัลบั้ม (Android / iOS) ===== */
+(function () {
+  var touch = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || ('ontouchstart' in window);
+  if (!touch) return;
+  var css = '#kbs-pick{position:fixed;inset:0;z-index:95;background:rgba(11,46,79,.5);display:none;align-items:flex-end;justify-content:center;font-family:"IBM Plex Sans Thai","Noto Sans Thai",sans-serif}' +
+    '#kbs-pick.open{display:flex}' +
+    '#kbs-pick .sheet{background:#FFFFFF;width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom, 0px));box-shadow:0 -12px 32px rgba(11,46,79,.2)}' +
+    '#kbs-pick .t{text-align:center;color:#4A6580;font-size:14px;padding:4px 0 10px}' +
+    '#kbs-pick button{font:inherit;width:100%;display:flex;align-items:center;gap:12px;min-height:56px;padding:0 16px;border:0;border-radius:14px;background:#F5FAFE;color:#0B2E4F;font-weight:600;font-size:17px;margin-bottom:8px;cursor:pointer}' +
+    '#kbs-pick button .i{width:40px;height:40px;border-radius:12px;background:#0A6FB8;color:#FFFFFF;display:flex;align-items:center;justify-content:center;flex:none}' +
+    '#kbs-pick button.c{justify-content:center;background:transparent;color:#0A6FB8;margin:4px 0 0}';
+  var CAM = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4zM12 11a3 3 0 1 0 0 6 3 3 0 0 0 0-6"></path></svg>';
+  var ALB = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5M15 9h.01"></path></svg>';
+  var sheet, target = null, armed = null;
+  function build() {
+    var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+    sheet = document.createElement('div'); sheet.id = 'kbs-pick'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); sheet.setAttribute('aria-label', 'เลือกวิธีแนบรูป');
+    sheet.innerHTML = '<div class="sheet"><div class="t">แนบรูปภาพ</div>' +
+      '<button type="button" data-m="cam"><span class="i">' + CAM + '</span>ถ่ายรูปทันที</button>' +
+      '<button type="button" data-m="alb"><span class="i">' + ALB + '</span>เลือกจากอัลบั้ม / คลังภาพ</button>' +
+      '<button type="button" class="c" data-m="x">ยกเลิก</button></div>';
+    document.body.appendChild(sheet);
+    sheet.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null;
+      if (e.target === sheet || (b && b.getAttribute('data-m') === 'x')) { close(); return; }
+      if (!b || !target) return;
+      var inp = target; close();
+      var orig = inp.getAttribute('data-capture') || inp.getAttribute('capture') || 'environment';
+      inp.setAttribute('data-capture', orig);
+      if (b.getAttribute('data-m') === 'cam') inp.setAttribute('capture', orig); else inp.removeAttribute('capture');
+      armed = inp; inp.click();   // ยังอยู่ในการแตะของผู้ใช้ จึงเปิดกล้อง/อัลบั้มได้
+      setTimeout(function () { if (armed === inp) armed = null; }, 1000);
+    });
+  }
+  function close() { sheet.classList.remove('open'); target = null; }
+  document.addEventListener('click', function (e) {
+    var inp = e.target;
+    if (!inp || inp.tagName !== 'INPUT' || inp.type !== 'file' || !/image/.test(inp.getAttribute('accept') || '')) return;
+    if (armed === inp) { armed = null; return; }       // คลิกที่เราสั่งเอง ปล่อยผ่าน
+    e.preventDefault();
+    if (!sheet) build();
+    target = inp; sheet.classList.add('open');
+    var f = sheet.querySelector('button'); if (f) f.focus();
+  }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheet && sheet.classList.contains('open')) close(); });
+})();
