@@ -126,6 +126,9 @@
     var inp = e.target;
     if (!inp || inp.tagName !== 'INPUT' || inp.type !== 'file' || !/image/.test(inp.getAttribute('accept') || '')) return;
     if (armed === inp) { armed = null; return; }       // คลิกที่เราสั่งเอง ปล่อยผ่าน
+    if ((inp.getAttribute('data-capture') || inp.getAttribute('capture')) === 'user') {   // รูปใบหน้า: บังคับกล้องหน้าอย่างเดียว
+      inp.setAttribute('capture', 'user'); return;
+    }
     e.preventDefault();
     if (!sheet) build();
     target = inp; sheet.classList.add('open');
