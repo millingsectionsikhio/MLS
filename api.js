@@ -19,6 +19,14 @@
       if (!url) return Promise.reject(new Error('ยังไม่ได้เชื่อม Google Sheets'));
       return call(fetch(url + '?action=' + key)).then(function (j) { return j.records; });
     },
+    listChecks: function () {
+      if (!url) return Promise.reject(new Error('ยังไม่ได้เชื่อม Google Sheets'));
+      return call(fetch(url + '?action=spareChecks')).then(function (j) { return j.records; });
+    },
+    listBorrows: function () {
+      if (!url) return Promise.reject(new Error('ยังไม่ได้เชื่อม Google Sheets'));
+      return call(fetch(url + '?action=borrows')).then(function (j) { return j.records; });
+    },
     listNews: function (limit) {
       if (!url) return Promise.reject(new Error('ยังไม่ได้เชื่อม Google Sheets'));
       return call(fetch(url + '?action=news&limit=' + (limit || 50))).then(function (j) { return j.records; });

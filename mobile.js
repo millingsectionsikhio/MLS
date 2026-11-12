@@ -7,6 +7,7 @@
     ['งานความปลอดภัย (HSE)', null, [['Safety sharing', 'safety-sharing.html'], ['งานตรวจสอบอุปกรณ์', 'hse.html'], ['บันทึกการตรวจสอบ', 'inspection.html']]],
     ['คู่มือและขั้นตอนการทำงาน', null, [['หัวข้อคู่มือ', 'manual.html'], ['Flow process การผลิตน้ำตาล', 'flow-process.html']]],
     ['อะไหล่สำรอง', 'spare-parts.html'],
+    ['รายการอื่น ๆ', null, [['การยืมอุปกรณ์', 'borrow.html']]],
     ['แผนผังองค์กร', 'organization.html'],
     ['ติดต่อแผนก', 'contact.html']
   ];
