@@ -64,8 +64,8 @@
       var s = this.session(); this.clearSession();
       if (s && url) fetch(url, { method: 'POST', body: JSON.stringify({ action: 'logout', token: s.token }) }).catch(function () {});
     },
-    thumb: function (p, w) { return p && p.id ? 'https://drive.google.com/thumbnail?id=' + p.id + '&sz=w' + (w || 400) : ''; },
-    gallery: function (photos) { var self = this; return (photos || []).filter(function (p) { return p && p.id; }).map(function (p) { return { src: self.thumb(p, 1600), href: p.url }; }); },
+    thumb: function (p, w) { return p && p.id && !p.deleted ? 'https://drive.google.com/thumbnail?id=' + p.id + '&sz=w' + (w || 400) : ''; },
+    gallery: function (photos) { var self = this; return (photos || []).filter(function (p) { return p && p.id && !p.deleted; }).map(function (p) { return { src: self.thumb(p, 1600), href: p.url }; }); },
     compress: function (file, maxSide) {
       maxSide = maxSide || 1280;
       return new Promise(function (resolve, reject) {

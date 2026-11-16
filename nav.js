@@ -1,7 +1,8 @@
 /* KBS Milling – เมนู "รายการอื่น ๆ" (แทรกระหว่างอะไหล่สำรองกับแผนผังองค์กร) */
 (function () {
   var ITEMS = [
-    { title: 'การยืมอุปกรณ์', en: 'Equipment borrowing', desc: 'บันทึกการยืม-คืนอุปกรณ์ พร้อมรูปถ่าย', href: 'borrow.html', icon: 'M4 7h16v13H4zM9 7V4h6v3M4 12h16M10 12v2h4v-2' }
+    { title: 'การยืมอุปกรณ์', en: 'Equipment borrowing', desc: 'บันทึกการยืม-คืนอุปกรณ์ พร้อมรูปถ่าย', href: 'borrow.html', icon: 'M4 7h16v13H4zM9 7V4h6v3M4 12h16M10 12v2h4v-2' },
+    { title: 'สำรองและล้างรูปเก่า', en: 'Backup & cleanup', desc: 'ดาวน์โหลดก่อนลบ (ผู้แก้ไข)', href: 'backup.html', icon: 'M12 3v12M7 10l5 5 5-5M4 19h16' }
   ];
   var here = (location.pathname.split('/').pop() || 'index.html');
   var isHere = ITEMS.some(function (x) { return x.href === here; });
